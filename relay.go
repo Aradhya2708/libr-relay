@@ -120,6 +120,10 @@ func main() {
 	defer deleteFromJSServer()
 
 	godotenv.Load()
+	port:=os.Getenv("PORT")
+	if port==""{
+			port="8080"
+		}
 	JS_API_key = os.Getenv("JS_API_KEY")
 	JS_ServerURL = os.Getenv("JS_ServerURL")
 	if JS_API_key == "" || JS_ServerURL == "" {
@@ -144,7 +148,7 @@ func main() {
 	RelayHost, err = libp2p.New(
 		libp2p.Identity(privKey),
 
-		libp2p.ListenAddrStrings("/ip4/0.0.0.0/tcp/443/ws"),
+		libp2p.ListenAddrStrings(fmt.Sprintf("/ip4/0.0.0.0/tcp/%s/ws", port)),
 		libp2p.Security(libp2ptls.ID, libp2ptls.New),
 		libp2p.ConnectionManager(connMgr),
 		libp2p.EnableNATService(),
